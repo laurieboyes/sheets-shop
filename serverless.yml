@@ -4,6 +4,8 @@ provider:
   name: aws
   runtime: nodejs8.10
   region: eu-west-1
+  environment:
+    SHEETS_API_KEY: ${file(env.json):SHEETS_API_KEY}
 
 plugins:
   - serverless-plugin-typescript
