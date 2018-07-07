@@ -1,0 +1,18 @@
+service: sheets-shop
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-1
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http: 
+          path: /
+          method: get
