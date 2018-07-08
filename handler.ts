@@ -1,26 +1,39 @@
 const queryString = require('querystring');
 import fetch from 'node-fetch';
 
-async function getStuff() {
+const MEAL_SELECT_ROW_INDEX = 1;
+
+async function getIngredients() {
   const spreadsheetId = '1A67bs-DAERPQBBPzIqszfQgUpoZuji4axrIio1UoP4E';
   const q = queryString.stringify({
     key: process.env.SHEETS_API_KEY,
-    ranges: 'Big fan!A1:B2'
+    ranges: ['Ingredients!A:AV'],
+    majorDimension: 'COLUMNS'
   });
 
-  return await (await fetch(
+  const allMeals = (await (await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet?${q}`
-  )).json();
+  )).json()).valueRanges[0].values;
+
+  const chosenMeals = allMeals.filter(
+    meal => meal[MEAL_SELECT_ROW_INDEX] === 'TRUE'
+  );
+
+  const allIngredients = chosenMeals.reduce((bigList, thisList) => {
+    return bigList.concat(thisList.slice(2));
+  }, []);
+
+  return allIngredients;
 }
 
 export async function hello(event, context, callback) {
-  const rawStuff = await getStuff();
+  const bigJumbledListOfIngredients = await getIngredients();
 
   const response = {
     statusCode: 200,
     body: JSON.stringify({
       message: 'got my stuff',
-      rawStuff
+      bigJumbledListOfIngredients
     })
   };
 
