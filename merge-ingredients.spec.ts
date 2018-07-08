@@ -1,3 +1,7 @@
+import mergeIngredients from './merge-ingredients';
+
 describe('merge-ingredients', () => {
-  it('should merge some ingreeds', () => {});
+  it('merge plurals and singles where s is the plural form', () => {
+    expect(mergeIngredients(['1 lemon', '2 lemons'])).toEqual(['3 lemon']);
+  });
 });
