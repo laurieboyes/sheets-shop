@@ -9,4 +9,12 @@ describe('merge-ingredients', () => {
       ['150ml mango juice']
     );
   });
+  it('should work with abritrary string amounts', () => {
+    expect(mergeIngredients(['some beans', 'some beans'])).toEqual([
+      '2 x some beans'
+    ]);
+  });
+  it('should work with 1 abritrary string amount', () => {
+    expect(mergeIngredients(['some beans'])).toEqual(['some beans']);
+  });
 });
