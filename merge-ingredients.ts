@@ -1,10 +1,12 @@
-function parseQuantity(quantityStr) {
-  if (quantityStr.match(/^\d+$/)) {
+function parseQuantity(quantityStrRaw) {
+  const quantityStr = quantityStrRaw.replace('½', '0.5');
+
+  if (quantityStr.match(/^(?:\d|\.)+$/)) {
     return {
       amount: +quantityStr
     };
-  } else if (/^\d+[a-z]+$/.test(quantityStr)) {
-    const matches = quantityStr.match(/^(\d+)([a-z]+)$/);
+  } else if (/^(?:\d|\.)+[a-z]+$/.test(quantityStr)) {
+    const matches = quantityStr.match(/^((?:\d|\.)+)([a-z]+)$/);
     return {
       unit: matches[2],
       amount: +matches[1]
