@@ -28,7 +28,7 @@ function parseQuantity(quantityStrRaw): Quantity {
   }
 }
 
-export default function(ingredients: string[]): Ingredient[] {
+export default function(ingredients: string[], typesMap): Ingredient[] {
   return ingredients.map(ingredientStr => {
     const name = ingredientStr
       .split(' ')
@@ -38,7 +38,8 @@ export default function(ingredients: string[]): Ingredient[] {
 
     return {
       name,
-      quantity
+      quantity,
+      type: typesMap[name.split('(')[0].trim()]
     };
   });
 }

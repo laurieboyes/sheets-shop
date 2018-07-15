@@ -14,7 +14,7 @@ describe('parse-ingredients', () => {
         name: 'lemon'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
   });
   it('should work on with quantities with units', () => {
     const ingredientStrs = ['100ml mango juice'];
@@ -28,7 +28,7 @@ describe('parse-ingredients', () => {
         name: 'mango juice'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
   });
   it('should handle fractional quantities', () => {
     const ingredientStrs = ['0.5 banana'];
@@ -41,7 +41,7 @@ describe('parse-ingredients', () => {
         name: 'banana'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
   });
   it('should handle fractional quantities with units', () => {
     const ingredientStrs = ['0.5mg beans'];
@@ -55,7 +55,7 @@ describe('parse-ingredients', () => {
         name: 'beans'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
   });
 
   it('should convert ½ to 0.5', () => {
@@ -69,7 +69,7 @@ describe('parse-ingredients', () => {
         name: 'banana'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
   });
 
   it('should work with abritrary string amounts', () => {
@@ -84,6 +84,44 @@ describe('parse-ingredients', () => {
         name: 'beans'
       }
     ];
-    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
+  });
+
+  it("should add the type if there's one in the provided map for the ingredient with this name", () => {
+    const ingredientStrs = ['some beans'];
+    const typesMap = {
+      beans: 'pantry'
+    };
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 1,
+          unit: 'some',
+          unitType: UnitType.Arbitrary
+        },
+        name: 'beans',
+        type: 'pantry'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, typesMap)).toEqual(expectedResult);
+  });
+
+  it('should disregard anything in brackets when looking for the type', () => {
+    const ingredientStrs = ['some beans (optional beans)'];
+    const typesMap = {
+      beans: 'pantry'
+    };
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 1,
+          unit: 'some',
+          unitType: UnitType.Arbitrary
+        },
+        name: 'beans (optional beans)',
+        type: 'pantry'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, typesMap)).toEqual(expectedResult);
   });
 });
