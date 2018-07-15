@@ -1,20 +1,23 @@
-function parseQuantity(quantityStrRaw) {
+import Quantity from './types/quantity';
+import Ingredient from './types/ingredient';
+
+function parseQuantity(quantityStrRaw): Quantity {
   const quantityStr = quantityStrRaw.replace('½', '0.5');
 
   if (quantityStr.match(/^(?:\d|\.)+$/)) {
     return {
-      amount: +quantityStr
+      number: +quantityStr
     };
   } else if (/^(?:\d|\.)+[a-z]+$/.test(quantityStr)) {
     const matches = quantityStr.match(/^((?:\d|\.)+)([a-z]+)$/);
     return {
       unit: matches[2],
-      amount: +matches[1]
+      number: +matches[1]
     };
   } else if (/^[a-zA-Z ]+$/.test(quantityStr)) {
     return {
       unit: quantityStr,
-      amount: 1,
+      number: 1,
       unitType: 'arbitrary'
     };
   } else {
@@ -22,11 +25,13 @@ function parseQuantity(quantityStrRaw) {
   }
 }
 
-export default function(ingredients) {
-  const mergedList = [];
+export default function(ingredients: Array<string>): Array<Ingredient> {
+  const mergedList = new Array<Ingredient>();
 
   ingredients.forEach(ingredientStr => {
-    const quantity = parseQuantity(ingredientStr.split(' ')[0].toLowerCase());
+    const quantity: Quantity = parseQuantity(
+      ingredientStr.split(' ')[0].toLowerCase()
+    );
     const itemName = ingredientStr
       .split(' ')
       .slice(1)
@@ -46,25 +51,27 @@ export default function(ingredients) {
       // if it's not already in there, stick it in
       mergedList.push({
         name: itemName,
-        ...quantity
+        quantity
       });
     } else {
       // else, inc the quantity
-      itemAlreadyMerged.amount += quantity.amount;
+      itemAlreadyMerged.quantity.number += quantity.number;
     }
   });
 
-  return mergedList.map(item => {
-    let quantity;
-    if (item.unitType === 'arbitrary') {
-      if (item.amount === 1) {
-        quantity = item.unit;
-      } else {
-        quantity = `${item.amount} x ${item.unit}`;
-      }
-    } else {
-      quantity = `${item.amount}${item.unit ? item.unit : ''}`;
-    }
-    return `${quantity} ${item.name}`;
-  });
+  return mergedList;
+
+  // return mergedList.map(item => {
+  //   let quantity;
+  //   if (item.unitType === 'arbitrary') {
+  //     if (item.amount === 1) {
+  //       quantity = item.unit;
+  //     } else {
+  //       quantity = `${item.amount} x ${item.unit}`;
+  //     }
+  //   } else {
+  //     quantity = `${item.amount}${item.unit ? item.unit : ''}`;
+  //   }
+  //   return `${quantity} ${item.name}`;
+  // });
 }

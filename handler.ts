@@ -1,10 +1,11 @@
 const queryString = require('querystring');
 import fetch from 'node-fetch';
 import mergeIngredients from './merge-ingredients';
+import parseIngredients from './parse-ingredients';
 
 const MEAL_SELECT_ROW_INDEX = 1;
 
-async function getIngredients() {
+async function getIngredientStrings(): Promise<string[]> {
   const spreadsheetId = '1A67bs-DAERPQBBPzIqszfQgUpoZuji4axrIio1UoP4E';
   const q = queryString.stringify({
     key: process.env.SHEETS_API_KEY,
@@ -29,14 +30,14 @@ async function getIngredients() {
 
 export async function hello(event, context, callback) {
   try {
-    const bigJumbledListOfIngredients = await getIngredients();
-    const mergedIngredients = mergeIngredients(bigJumbledListOfIngredients);
+    const ingredientStrings: string[] = await getIngredientStrings();
+    const parsedIngredients = parseIngredients(ingredientStrings);
 
     const response = {
       statusCode: 200,
       body: JSON.stringify({
         message: 'got my stuff',
-        mergedIngredients
+        parsedIngredients
       })
     };
     callback(null, response);
