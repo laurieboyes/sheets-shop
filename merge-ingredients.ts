@@ -1,65 +1,48 @@
-import Quantity from './types/quantity';
 import Ingredient from './types/ingredient';
 
-function parseQuantity(quantityStrRaw): Quantity {
-  const quantityStr = quantityStrRaw.replace('½', '0.5');
-
-  if (quantityStr.match(/^(?:\d|\.)+$/)) {
-    return {
-      number: +quantityStr
-    };
-  } else if (/^(?:\d|\.)+[a-z]+$/.test(quantityStr)) {
-    const matches = quantityStr.match(/^((?:\d|\.)+)([a-z]+)$/);
-    return {
-      unit: matches[2],
-      number: +matches[1]
-    };
-  } else if (/^[a-zA-Z ]+$/.test(quantityStr)) {
-    return {
-      unit: quantityStr,
-      number: 1,
-      unitType: 'arbitrary'
-    };
-  } else {
-    throw new Error('Wth is this quantity? ' + quantityStr);
+function getMergedIngredientsWithSameName(
+  mergedIngredients: Ingredient[],
+  ingredient: Ingredient
+) {
+  // very naive stemming
+  const nameMatches = [ingredient.name];
+  if (ingredient.name.slice(-1) === 's') {
+    nameMatches.push(ingredient.name.slice(0, ingredient.name.length - 1));
   }
+  return mergedIngredients.filter(mergedListItem =>
+    nameMatches.includes(mergedListItem.name)
+  );
 }
 
-export default function(ingredients: Array<string>): Array<Ingredient> {
-  const mergedList = new Array<Ingredient>();
+export default function(unmergedIngredients: Ingredient[]): Ingredient[] {
+  const mergedIngredients: Ingredient[] = [];
 
-  ingredients.forEach(ingredientStr => {
-    const quantity: Quantity = parseQuantity(
-      ingredientStr.split(' ')[0].toLowerCase()
-    );
-    const itemName = ingredientStr
-      .split(' ')
-      .slice(1)
-      .join(' ');
-
-    // stemmer-lite
-    const itemMatches = [itemName];
-    if (itemName.slice(-1) === 's') {
-      itemMatches.push(itemName.slice(0, itemName.length - 1));
-    }
-
-    const itemAlreadyMerged = mergedList.find(mergedListItem =>
-      itemMatches.includes(mergedListItem.name)
+  unmergedIngredients.forEach((thisIngredient: Ingredient) => {
+    const sameName: Ingredient[] = getMergedIngredientsWithSameName(
+      mergedIngredients,
+      thisIngredient
     );
 
-    if (!itemAlreadyMerged) {
-      // if it's not already in there, stick it in
-      mergedList.push({
-        name: itemName,
-        quantity
-      });
+    if (!sameName.length) {
+      // if there's no items in there with the same name, stick it in
+      mergedIngredients.push(thisIngredient);
     } else {
-      // else, inc the quantity
-      itemAlreadyMerged.quantity.number += quantity.number;
+      // else, check out the units
+      const sameNameAndUnit: Ingredient = sameName.find(
+        (mergedIngreed: Ingredient) =>
+          thisIngredient.quantity.unit === mergedIngreed.quantity.unit
+      );
+
+      if (sameNameAndUnit) {
+        sameNameAndUnit.quantity.number += thisIngredient.quantity.number;
+      } else {
+        // new unit, stick it in
+        mergedIngredients.push(thisIngredient);
+      }
     }
   });
 
-  return mergedList;
+  return mergedIngredients;
 
   // return mergedList.map(item => {
   //   let quantity;

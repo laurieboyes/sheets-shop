@@ -1,18 +1,20 @@
-import mergeIngredients from './merge-ingredients';
+import parseIngredients from './parse-ingredients';
 import Ingredient from './types/ingredient';
+import UnitType from './types/unit-type';
 
-describe('merge-ingredients', () => {
+describe('parse-ingredients', () => {
   it('should work on with quantities without units', () => {
     const ingredientStrs = ['1 lemon'];
     const expectedResult: Ingredient[] = [
       {
         quantity: {
-          number: 1
+          number: 1,
+          unitType: UnitType.Quantifiable
         },
         name: 'lemon'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
   it('should work on with quantities with units', () => {
     const ingredientStrs = ['100ml mango juice'];
@@ -20,24 +22,26 @@ describe('merge-ingredients', () => {
       {
         quantity: {
           number: 100,
-          unit: 'ml'
+          unit: 'ml',
+          unitType: UnitType.Quantifiable
         },
         name: 'mango juice'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
   it('should handle fractional quantities', () => {
     const ingredientStrs = ['0.5 banana'];
     const expectedResult: Ingredient[] = [
       {
         quantity: {
-          number: 0.5
+          number: 0.5,
+          unitType: UnitType.Quantifiable
         },
         name: 'banana'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
   it('should handle fractional quantities with units', () => {
     const ingredientStrs = ['0.5mg beans'];
@@ -45,12 +49,13 @@ describe('merge-ingredients', () => {
       {
         quantity: {
           number: 0.5,
-          unit: 'mg'
+          unit: 'mg',
+          unitType: UnitType.Quantifiable
         },
         name: 'beans'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
 
   it('should convert ½ to 0.5', () => {
@@ -58,12 +63,13 @@ describe('merge-ingredients', () => {
     const expectedResult: Ingredient[] = [
       {
         quantity: {
-          number: 0.5
+          number: 0.5,
+          unitType: UnitType.Quantifiable
         },
         name: 'banana'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
 
   it('should work with abritrary string amounts', () => {
@@ -73,11 +79,11 @@ describe('merge-ingredients', () => {
         quantity: {
           number: 1,
           unit: 'some',
-          unitType: 'arbitrary'
+          unitType: UnitType.Arbitrary
         },
         name: 'beans'
       }
     ];
-    expect(mergeIngredients(ingredientStrs)).toEqual(expectedResult);
+    expect(parseIngredients(ingredientStrs)).toEqual(expectedResult);
   });
 });
