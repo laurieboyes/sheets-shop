@@ -1,6 +1,7 @@
 import mergeIngredients from './merge-ingredients';
 import parseIngredients from './parse-ingredients';
 import stringifyIngedient from './stringify-ingredient';
+import sortIngredients from './sort-ingredients';
 import {
   getIngredientStrings,
   getIngredientTypesMap
@@ -16,9 +17,7 @@ export async function hello(event, context, callback) {
       ingredientTypesMap
     );
     const mergedIngredients = mergeIngredients(parsedIngredients);
-    const sortedIngredients = mergedIngredients.sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    const sortedIngredients = sortIngredients(mergedIngredients);
     const stringifiedIngredients = sortedIngredients.map(i =>
       stringifyIngedient(i)
     );
@@ -27,8 +26,7 @@ export async function hello(event, context, callback) {
       statusCode: 200,
       body: JSON.stringify({
         message: 'got my stuff',
-        stringifiedIngredients,
-        ingredientTypesMap
+        stringifiedIngredients
       })
     };
     callback(null, response);

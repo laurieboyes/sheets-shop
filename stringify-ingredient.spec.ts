@@ -2,7 +2,7 @@ import stringifyIngredient from './stringify-ingredient';
 import Ingredient from './types/ingredient';
 import UnitType from './types/unit-type';
 
-describe('merge-ingredients', () => {
+describe('stringify-ingredients', () => {
   it('should stringify quantifiable ingredients', () => {
     const ingredient: Ingredient = {
       name: 'lemon',
