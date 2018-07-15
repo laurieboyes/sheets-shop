@@ -43,18 +43,4 @@ export default function(unmergedIngredients: Ingredient[]): Ingredient[] {
   });
 
   return mergedIngredients;
-
-  // return mergedList.map(item => {
-  //   let quantity;
-  //   if (item.unitType === 'arbitrary') {
-  //     if (item.amount === 1) {
-  //       quantity = item.unit;
-  //     } else {
-  //       quantity = `${item.amount} x ${item.unit}`;
-  //     }
-  //   } else {
-  //     quantity = `${item.amount}${item.unit ? item.unit : ''}`;
-  //   }
-  //   return `${quantity} ${item.name}`;
-  // });
 }
