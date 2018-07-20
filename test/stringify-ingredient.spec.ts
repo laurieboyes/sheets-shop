@@ -1,6 +1,6 @@
-import stringifyIngredient from './stringify-ingredient';
-import Ingredient from './types/ingredient';
-import UnitType from './types/unit-type';
+import stringifyIngredient from '../src/stringify-ingredient';
+import Ingredient from '../src/types/ingredient';
+import UnitType from '../src/types/unit-type';
 
 describe('stringify-ingredients', () => {
   it('should stringify quantifiable ingredients', () => {

@@ -1,8 +1,7 @@
-import stringifyIngredient from './stringify-ingredient';
-import Ingredient from './types/ingredient';
-import Quantity from './types/quantity';
-import UnitType from './types/unit-type';
-import sortIngredients from './sort-ingredients';
+import Ingredient from '../src/types/ingredient';
+import Quantity from '../src/types/quantity';
+import UnitType from '../src/types/unit-type';
+import sortIngredients from '../src/sort-ingredients';
 
 // quantity isn't relevant for these tests but we still need one because we're conscientious TypeScript developers now
 const quantity: Quantity = {

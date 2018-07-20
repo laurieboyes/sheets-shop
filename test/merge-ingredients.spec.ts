@@ -1,6 +1,6 @@
-import mergeIngredients from './merge-ingredients';
-import Ingredient from './types/ingredient';
-import UnitType from './types/unit-type';
+import mergeIngredients from '../src/merge-ingredients';
+import Ingredient from '../src/types/ingredient';
+import UnitType from '../src/types/unit-type';
 
 describe('merge-ingredients', () => {
   it('should merge plurals and singles where s is the plural form', () => {

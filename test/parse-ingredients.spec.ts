@@ -1,6 +1,6 @@
-import parseIngredients from './parse-ingredients';
-import Ingredient from './types/ingredient';
-import UnitType from './types/unit-type';
+import parseIngredients from '../src/parse-ingredients';
+import Ingredient from '../src/types/ingredient';
+import UnitType from '../src/types/unit-type';
 
 describe('parse-ingredients', () => {
   it('should work on with quantities without units', () => {

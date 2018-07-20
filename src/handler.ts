@@ -31,6 +31,7 @@ export async function hello(event, context, callback) {
     };
     callback(null, response);
   } catch (error) {
+    console.log(error);
     const response = {
       statusCode: 500,
       body: JSON.stringify({

@@ -6,6 +6,7 @@ provider:
   region: eu-west-1
   environment:
     SHEETS_API_KEY: ${file(env.json):SHEETS_API_KEY}
+    SPREADSHEET_ID: ${file(env.json):SPREADSHEET_ID}
 
 plugins:
   - serverless-plugin-typescript
@@ -13,7 +14,7 @@ plugins:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: src/handler.hello
     events:
       - http: 
           path: /
