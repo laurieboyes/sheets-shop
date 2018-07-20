@@ -11,9 +11,23 @@ export async function getIngredientStrings(): Promise<string[]> {
     majorDimension: 'COLUMNS'
   });
 
-  const allMeals = (await (await fetch(
+  const allMealsJson = await (await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet?${q}`
-  )).json()).valueRanges[0].values;
+  )).json();
+
+  if (allMealsJson.error) {
+    if (allMealsJson.error.code == 404) {
+      throw new Error(
+        `Couldn't find spreadsheet with ID '${process.env.SPREADSHEET_ID}'`
+      );
+    } else {
+      throw new Error(
+        `${allMealsJson.error.code} ${allMealsJson.error.message}`
+      );
+    }
+  }
+
+  const allMeals = allMealsJson.valueRanges[0].values;
 
   const chosenMeals = allMeals.filter(
     meal => meal[MEAL_SELECT_ROW_INDEX] === 'TRUE'
@@ -34,9 +48,23 @@ export async function getIngredientTypesMap() {
     majorDimension: 'ROWS'
   });
 
-  const ingredientTypes = (await (await fetch(
+  const ingredientTypesJson = await (await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet?${q}`
-  )).json()).valueRanges[0].values;
+  )).json();
+
+  if (ingredientTypesJson.error) {
+    if (ingredientTypesJson.error.code == 404) {
+      throw new Error(
+        `Couldn't find spreadsheet with ID '${process.env.SPREADSHEET_ID}'`
+      );
+    } else {
+      throw new Error(
+        `${ingredientTypesJson.error.code} ${ingredientTypesJson.error.message}`
+      );
+    }
+  }
+
+  const ingredientTypes = ingredientTypesJson.valueRanges[0].values;
 
   const ingredientTypesMap = {};
   ingredientTypes.forEach(([name, type]) => {
