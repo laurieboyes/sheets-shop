@@ -1,6 +1,6 @@
 import Ingredient from './types/ingredient';
 
-const typeOrder = ['veg', 'chilled', 'meat', 'pantry', 'frozen'];
+const typeOrder = ['veg', 'chilled', 'meat', 'pantry', 'baking', 'frozen'];
 
 export default function(ingredients: Ingredient[]): Ingredient[] {
   return ingredients
