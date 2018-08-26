@@ -24,19 +24,14 @@ export async function hello(event, context, callback) {
 
     const response = {
       statusCode: 200,
-      body: JSON.stringify({
-        message: 'got my stuff',
-        stringifiedIngredients
-      })
+      body: stringifiedIngredients.join('\n')
     };
     callback(null, response);
   } catch (error) {
     console.log(error);
     const response = {
       statusCode: 500,
-      body: JSON.stringify({
-        message: error.message
-      })
+      body: `Error: ${error.message}`
     };
     callback(null, response);
   }
