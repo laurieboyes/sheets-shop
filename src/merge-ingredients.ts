@@ -24,7 +24,7 @@ export default function(unmergedIngredients: Ingredient[]): Ingredient[] {
     );
 
     if (!sameName.length) {
-      // if there's no items in there with the same name, stick it in
+      // if there are no items in there with the same name, stick it in
       mergedIngredients.push(thisIngredient);
     } else {
       // else, check out the units
