@@ -2,6 +2,7 @@ const queryString = require('querystring');
 import fetch from 'node-fetch';
 
 const MEAL_SELECT_ROW_INDEX = 1;
+const MULTIPLIER_ROW_INDEX = 2;
 
 export async function getIngredientStrings(): Promise<string[]> {
   const spreadsheetId = process.env.SPREADSHEET_ID;
@@ -34,7 +35,12 @@ export async function getIngredientStrings(): Promise<string[]> {
   );
 
   const allIngredients = chosenMeals.reduce((bigList, thisList) => {
-    return bigList.concat(thisList.slice(2));
+    return bigList.concat(
+      thisList.slice(3).map(ingreed => {
+        const multiplier = thisList[MULTIPLIER_ROW_INDEX] || 1;
+        return `${ingreed} x ${multiplier}`;
+      })
+    );
   }, []);
 
   return allIngredients;
