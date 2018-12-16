@@ -124,4 +124,62 @@ describe('parse-ingredients', () => {
     ];
     expect(parseIngredients(ingredientStrs, typesMap)).toEqual(expectedResult);
   });
+
+  it('should work with integer meal-multiplier suffixes', () => {
+    const ingredientStrs = ['1 lemon x 2'];
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 2,
+          unitType: UnitType.Quantifiable
+        },
+        name: 'lemon'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
+  });
+
+  it('should work with fractional meal-multiplier suffixes', () => {
+    const ingredientStrs = ['1 lemon x 0.5'];
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 0.5,
+          unitType: UnitType.Quantifiable
+        },
+        name: 'lemon'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
+  });
+
+  it('should work with ingreeds that have spaces in the name', () => {
+    const ingredientStrs = ['some bean girls'];
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 1,
+          unit: 'some',
+          unitType: UnitType.Arbitrary
+        },
+        name: 'bean girls'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
+  });
+
+  it('should work with ingreeds that have spaces in the name and a multiplier too', () => {
+    const ingredientStrs = ['some bean girls x 10'];
+    const expectedResult: Ingredient[] = [
+      {
+        quantity: {
+          number: 10,
+          unit: 'some',
+          unitType: UnitType.Arbitrary
+        },
+        name: 'bean girls'
+      }
+    ];
+    expect(parseIngredients(ingredientStrs, {})).toEqual(expectedResult);
+  });
 });

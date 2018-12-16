@@ -30,11 +30,25 @@ function parseQuantity(quantityStrRaw): Quantity {
 
 export default function(ingredients: string[], typesMap): Ingredient[] {
   return ingredients.map(ingredientStr => {
-    const name = ingredientStr
+    let nameAndQuantity: string;
+    let mealMultiplier: number;
+    if (ingredientStr.match(/ x [\d|.]+$/)) {
+      const parts = ingredientStr.split(' ');
+      mealMultiplier = Number(parts[parts.length - 1]);
+      nameAndQuantity = parts.slice(0, -2).join(' ');
+    } else {
+      mealMultiplier = 1;
+      nameAndQuantity = ingredientStr;
+    }
+
+    const name = nameAndQuantity
       .split(' ')
       .slice(1)
       .join(' ');
     const quantity = parseQuantity(ingredientStr.split(' ')[0].toLowerCase());
+
+    // apply the meal multiplier
+    quantity.number = quantity.number *= mealMultiplier;
 
     return {
       name,
